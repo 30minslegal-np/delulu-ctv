@@ -1,19 +1,661 @@
-<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DELULU | Tạo hợp đồng CTV dịch thuật</title><script src="https://cdn.jsdelivr.net/npm/docx@9.5.1/dist/index.umd.js"></script><style>:root{font-family:Inter,system-ui,Arial;color:#20283a;background:#f5f6fa}*{box-sizing:border-box}body{margin:0}header{background:#14213d;color:white;padding:28px max(20px,calc((100vw - 1160px)/2))}header small{color:#a7c8ff;letter-spacing:2px}h1{margin:9px 0;font-size:28px}main{max-width:1160px;margin:25px auto;padding:0 18px;display:grid;grid-template-columns:1fr 1fr;gap:22px}.panel{background:white;border:1px solid #e4e8f0;border-radius:16px;padding:24px;box-shadow:0 6px 30px #18263b0a}h2{font-size:19px;margin:0 0 18px}h3{font-size:14px;color:#4665a3;margin:20px 0 10px}label{display:block;font-size:13px;font-weight:650;margin:12px 0 5px}input,select,textarea{width:100%;padding:11px 12px;border:1px solid #d5dbe6;border-radius:9px;font:inherit;background:#fff}textarea{min-height:70px}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:20px}button{background:#2057bc;color:white;border:0;border-radius:9px;padding:12px 15px;font-weight:700;cursor:pointer}button.secondary{background:#eaf0ff;color:#234477}.note{font-size:12px;color:#667085;line-height:1.6}.paper{font-family:'Times New Roman',serif;font-size:13px;line-height:1.55;color:#161616;white-space:pre-wrap;max-height:78vh;overflow:auto;border:1px solid #e5e5e5;padding:22px;background:white}.paper strong{font-size:17px}#status{font-size:13px;color:#26663a;margin-top:10px}@media(max-width:800px){main{grid-template-columns:1fr}.paper{max-height:55vh}}@media print{header,.form-panel,.actions,.note{display:none!important}main{display:block;margin:0;padding:0}.panel{border:0;box-shadow:none;padding:0}.paper{max-height:none;overflow:visible;border:0;padding:0;font-size:12pt}}</style></head><body><header><small>DELULU JSC · CONTRACT BUILDER</small><h1>Hợp đồng cộng tác viên dịch thuật</h1><div>Điền thông tin · Chọn % thù lao riêng · Xem trước · Xuất Word</div></header><main><section class="panel form-panel"><h2>01 / Thông tin hợp đồng</h2><div class="two"><div><label>Số hợp đồng *</label><input id="number" value="01/2026/HĐCTV-DLL"></div><div><label>Ngày ký *</label><input id="signed" type="date"></div></div><div class="two"><div><label>Ngày bắt đầu *</label><input id="start" type="date"></div><div><label>Ngày kết thúc *</label><input id="end" type="date"></div></div><h3>Đại diện DELULU</h3><label>Người đại diện ký phía công ty *</label><input id="rep" placeholder="Người được ủy quyền hợp lệ"><label>Chức vụ / căn cứ ủy quyền</label><input id="role" placeholder="Theo Nghị quyết HĐQT / Giấy ủy quyền số..."><h3>Thông tin cộng tác viên</h3><label>Họ và tên *</label><input id="name" placeholder="Nguyễn Văn A"><div class="two"><div><label>Ngày sinh</label><input id="dob" type="date"></div><div><label>Số định danh cá nhân</label><input id="idno" placeholder="Số CCCD"></div></div><label>Mã số thuế (nếu có)</label><input id="taxid"><label>Địa chỉ</label><input id="address"><label>Email nhận đối soát *</label><input id="email" type="email"><div class="two"><div><label>Số tài khoản</label><input id="bankno"></div><div><label>Ngân hàng</label><input id="bank"></div></div><h3>Thù lao theo năng lực / thỏa thuận</h3><div class="two"><div><label>Tỷ lệ % riêng của CTV *</label><input id="rate" type="number" min="0" max="100" step="0.01" value="50"></div><div><label>Doanh thu dịch vụ ví dụ (VNĐ)</label><input id="revenue" type="number" min="0" value="1000000"></div></div><p id="estimate" class="note"></p><label>Ghi chú phạm vi ngôn ngữ / công việc</label><textarea id="scope" placeholder="Ví dụ: Dịch Anh–Việt, hiệu đính, xử lý đơn gấp..."></textarea><div class="actions"><button id="download">Tạo & tải .docx</button><button class="secondary" onclick="window.print()">In / Lưu PDF</button><button class="secondary" id="clear">Xóa dữ liệu</button></div><p id="status"></p><p class="note">Dữ liệu chỉ được xử lý trên trình duyệt. Không tự động gửi email, không lưu trên máy chủ. Không nhập thông tin thật trên máy tính công cộng.</p></section><section class="panel"><h2>02 / Xem trước hợp đồng</h2><div id="preview" class="paper"></div><p class="note">Bản mẫu dựa trên hợp đồng DELULU cung cấp. Cần kiểm tra thẩm quyền ký, tính chất hợp đồng và quy định thuế/BHXH trước khi sử dụng chính thức.</p></section></main><script>
-const ids=['number','signed','start','end','rep','role','name','dob','idno','taxid','address','email','bankno','bank','rate','revenue','scope'];const $=id=>document.getElementById(id);const get=id=>$(id).value.trim();const fmt=s=>s?new Date(s+'T12:00:00').toLocaleDateString('vi-VN'):'……';const val=id=>get(id)||'……………………';const money=n=>Number(n||0).toLocaleString('vi-VN')+' đồng';
-function sections(){return [
-['CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM','Độc lập – Tự do – Hạnh phúc','HỢP ĐỒNG CỘNG TÁC VIÊN DỊCH THUẬT','Số: '+val('number'),'Hôm nay, ngày '+fmt(get('signed'))+', tại Thành phố Hồ Chí Minh, chúng tôi gồm:'],
-['BÊN A – BÊN THUÊ DỊCH VỤ','CÔNG TY CỔ PHẦN DELULU','Mã số doanh nghiệp/MST: 0319403035','Địa chỉ: 120 Trương Văn Bang, phường Cát Lái, Thành phố Hồ Chí Minh','Đại diện ký: '+val('rep'),'Chức vụ/căn cứ đại diện: '+val('role'),'Email đối soát: delulu.jsc@gmail.com','Tài khoản: 113003046434 – VietinBank – CN4 TP.HCM'],
-['BÊN B – CỘNG TÁC VIÊN DỊCH THUẬT','Họ và tên: '+val('name'),'Ngày sinh: '+fmt(get('dob')),'Số định danh cá nhân: '+val('idno'),'Mã số thuế (nếu có): '+val('taxid'),'Địa chỉ: '+val('address'),'Email: '+val('email'),'Tài khoản nhận tiền: '+val('bankno')+' – '+val('bank')],
-['Điều 1. Nội dung và tính chất cộng tác','1. Bên B nhận dịch thuật, phiên dịch, hiệu đính, rà soát bản dịch hoặc hỗ trợ hồ sơ theo từng đơn hàng do Bên A đề nghị và Bên B chấp nhận qua email/hệ thống. Phạm vi dự kiến: '+(get('scope')||'Theo từng đơn hàng được xác nhận')+'.','2. Bên B có quyền nhận hoặc từ chối từng đơn; không cam kết số đơn tối thiểu, không có lương cố định hoặc chế độ chấm công theo hợp đồng này. Bản chất quan hệ được xác định theo thực tế thực hiện và pháp luật.','3. Công việc có yêu cầu chứng thực chữ ký người dịch chỉ được thực hiện khi đáp ứng đầy đủ điều kiện pháp luật; hợp đồng này không thay thế thủ tục đăng ký/phê duyệt với cơ quan có thẩm quyền.'],
-['Điều 2. Giao việc và nghiệm thu','1. Mỗi đơn hàng ghi rõ mã đơn, ngôn ngữ, yêu cầu, hạn bàn giao, giá trị tính thù lao, tỷ lệ %, trách nhiệm phí vận chuyển và người nhận việc; xác nhận bằng email hoặc hệ thống.','2. Bên B bàn giao đúng hạn, bảo đảm chất lượng, bảo mật và sửa lỗi chuyên môn do mình gây ra theo thời hạn hợp lý. Nghiệm thu bằng email hoặc xác nhận trên hệ thống.'],
-['Điều 3. Tỷ lệ và căn cứ tính thù lao','1. Tỷ lệ thù lao áp dụng cho Bên B: '+val('rate')+'% doanh thu dịch vụ dịch thuật làm căn cứ chia thù lao của từng đơn hàng, trừ khi hai bên thống nhất tỷ lệ khác bằng email trước khi nhận đơn.','2. Thù lao gộp từng đơn = Giá trị làm căn cứ chia thù lao × Tỷ lệ %. Giá trị làm căn cứ là doanh thu dịch vụ dịch thuật thực thu, không gồm VAT (nếu có), phí chứng thực/công chứng thu hộ, phí vận chuyển thu hộ và các khoản thu hộ bên thứ ba, trừ thỏa thuận khác bằng văn bản.','3. Điều chỉnh do hủy, giảm giá, hoàn tiền hoặc công việc bổ sung phải được hai bên xác nhận; không đơn phương thay đổi tỷ lệ sau khi công việc hoàn thành.'],
-['Điều 4. Đối soát và thanh toán','1. Kỳ đối soát từ ngày 01 đến hết tháng. Chậm nhất ngày 01 tháng kế tiếp, Bên A gửi email bảng đối soát: mã đơn, doanh thu tính chia, tỷ lệ %, thù lao gộp, phí giao hàng, điều chỉnh, thuế khấu trừ (nếu có), số thực nhận.','2. Bên B phản hồi trước 17 giờ ngày 02 tháng kế tiếp. Khoản không tranh chấp vẫn được thanh toán đúng hạn; sai sót có chứng cứ được điều chỉnh kỳ sau.','3. Bên A chuyển khoản vào ngày 03 của tháng tiếp theo. Nếu trùng ngày nghỉ/lễ hoặc ngân hàng không xử lý, chuyển vào ngày làm việc tiếp theo.'],
-['Điều 5. Phí giao hàng và khấu trừ','1. Đối với đơn hàng cần ship hồ sơ/bản dịch, phí giao hàng thực tế do Bên A ứng trả và thuộc trách nhiệm Bên B theo xác nhận khi giao việc được trừ vào tổng thù lao phải thanh toán trong tháng.','2. Chỉ khấu trừ phí có mã đơn, số tiền và chứng từ/lịch sử giao hàng hợp lệ. Không trừ phí do lỗi Bên A, phí chưa thông báo/chấp thuận hoặc phí khách đã thanh toán mà Bên B không chịu.','3. Số tiền chuyển khoản = Tổng thù lao gộp nghiệm thu – Phí ship hợp lệ Bên B chịu – Điều chỉnh được xác nhận – Thuế TNCN khấu trừ theo pháp luật (nếu có). Nếu phí vượt thù lao kỳ này, việc chuyển phần chênh lệch sang kỳ sau phải được Bên B đồng ý qua email.'],
-['Điều 6. Thuế và chứng từ','Bên A xác định, khấu trừ, kê khai thuế (nếu phát sinh) theo bản chất thu nhập và quy định tại thời điểm chi trả. Bên B cung cấp thông tin định danh, MST và phối hợp thực hiện nghĩa vụ thuế. Tỷ lệ thù lao nêu trên là trước khấu trừ thuế, trừ thỏa thuận khác.'],
-['Điều 7. Quyền, nghĩa vụ và bảo mật','Bên A giao tài liệu, xác nhận yêu cầu, nghiệm thu và thanh toán đúng hạn. Bên B bảo đảm chất lượng, tiến độ, không tiết lộ hoặc tự ý chuyển giao tài liệu khách hàng. Nghĩa vụ bảo mật tiếp tục 03 năm sau khi chấm dứt, riêng dữ liệu cá nhân và bí mật kinh doanh tuân theo pháp luật.'],
-['Điều 8. Thời hạn và chấm dứt','Hợp đồng có hiệu lực từ '+fmt(get('start'))+' đến '+fmt(get('end'))+'. Có thể gia hạn bằng phụ lục. Mỗi bên được chấm dứt bằng email báo trước 15 ngày, nhưng phải xử lý đơn đang nhận và thanh toán công việc đã nghiệm thu. Tranh chấp ưu tiên thương lượng, nếu không thành thì giải quyết tại Tòa án có thẩm quyền.','Các email giao việc, bảng tỷ lệ, bảng đối soát và phụ lục được hai bên xác nhận là bộ phận của hợp đồng. Hợp đồng lập thành 02 bản có giá trị như nhau.'],
-['ĐẠI DIỆN BÊN A                                    BÊN B – CỘNG TÁC VIÊN','(Ký, ghi rõ họ tên, chức vụ)                         (Ký, ghi rõ họ tên)']];}
-function render(){const a=sections();$('preview').textContent=a.map(s=>s.join('\n')).join('\n\n');$('estimate').textContent='Ví dụ: '+money(get('revenue'))+' × '+(get('rate')||0)+'% = '+money(Number(get('revenue'))*Number(get('rate'))/100)+' thù lao gộp (chưa trừ ship/thuế).'}ids.forEach(id=>$(id).addEventListener('input',render));const now=new Date();$('signed').value=now.toISOString().slice(0,10);$('start').value=$('signed').value;$('end').value=(now.getFullYear()+1)+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');render();
-$('download').onclick=async()=>{for(const id of ['number','signed','start','end','rep','name','email','rate'])if(!get(id)){alert('Vui lòng nhập: '+id);$(id).focus();return}if(Number(get('rate'))<0||Number(get('rate'))>100){alert('Tỷ lệ phải trong khoảng 0–100%');return}if(get('end')<get('start')){alert('Ngày kết thúc không được trước ngày bắt đầu');return}if(!window.docx){alert('Không tải được thư viện tạo Word. Kiểm tra internet hoặc dùng In / Lưu PDF.');return}const {Document,Paragraph,TextRun,Packer,AlignmentType}=window.docx;const headings=new Set(['HỢP ĐỒNG CỘNG TÁC VIÊN DỊCH THUẬT','CÔNG TY CỔ PHẦN DELULU']);const paras=[];sections().forEach((s,si)=>{s.forEach((line,i)=>paras.push(new Paragraph({alignment:si===0||si===sections().length-1?AlignmentType.CENTER:AlignmentType.LEFT,spacing:{after:110},children:[new TextRun({text:line,bold:i===0||headings.has(line),font:'Times New Roman',size:i===0&&si===0?25:24})]})));paras.push(new Paragraph({text:''}));});const doc=new Document({sections:[{properties:{page:{margin:{top:1100,bottom:1000,left:1100,right:1000}}},children:paras}]});try{const blob=await Packer.toBlob(doc),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='DELULU_Hop_dong_CTV_'+get('name').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9]+/g,'_')+'.docx';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);$('status').textContent='Đã tạo file Word. Hãy kiểm tra trước khi ký.'}catch(e){$('status').textContent='Không tạo được Word: '+e.message}};
-$('clear').onclick=()=>{if(confirm('Xóa toàn bộ dữ liệu đã nhập?')){ids.forEach(id=>$(id).value='');render()}};
-</script></body></html>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tạo Hợp đồng CTV Dịch thuật | DELULU JSC</title>
+<meta name="description" content="Điền thông tin cộng tác viên, nhập tỷ lệ thù lao riêng và tải ngay Hợp đồng cộng tác viên dịch thuật (.docx) của DELULU JSC.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Tinos:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/docx@9.5.1/dist/index.iife.js"></script>
+<style>
+  :root{
+    --ink:#1c1a33; --muted:#6b6880; --line:#e4e1ee; --bg:#f6f4fa; --card:#fff;
+    --accent:#d6336c; --accent-soft:#fde7ef; --ok:#1f9d6b; --warn:#c77700;
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Be Vietnam Pro",system-ui,sans-serif;color:var(--ink);background:var(--bg);font-size:14px;line-height:1.5}
+  header.top{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .top-in{max-width:1400px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .brand{font-weight:700;letter-spacing:.2px}
+  .brand span{color:var(--accent)}
+  .top-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .hero{max-width:1400px;margin:0 auto;padding:28px 24px 8px}
+  .badge{display:inline-block;background:var(--accent-soft);color:var(--accent);font-weight:600;font-size:12px;padding:4px 10px;border-radius:99px}
+  h1{font-size:28px;margin:10px 0 4px;line-height:1.25}
+  .sub{color:var(--muted);margin:0}
+  .steps{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 0;padding:0;list-style:none}
+  .steps li{background:#fff;border:1px solid var(--line);border-radius:99px;padding:6px 14px 6px 6px;display:flex;align-items:center;gap:8px;font-size:13px}
+  .steps b{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--ink);color:#fff;font-size:12px}
+  main{max-width:1400px;margin:0 auto;padding:20px 24px 60px;display:grid;grid-template-columns:minmax(380px,520px) 1fr;gap:24px;align-items:start}
+  @media (max-width:980px){main{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px 18px 8px;margin-bottom:16px}
+  .card h2{font-size:15px;margin:0 0 4px;display:flex;align-items:center;gap:8px}
+  .card h2 .n{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:6px;background:var(--accent);color:#fff;font-size:12px}
+  .card .hint{color:var(--muted);font-size:12.5px;margin:0 0 12px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 12px}
+  .grid .full{grid-column:1/-1}
+  label{display:block;font-size:12.5px;font-weight:500;margin-bottom:12px}
+  label .req{color:var(--accent)}
+  input,select,textarea{width:100%;font:inherit;color:inherit;border:1px solid var(--line);border-radius:9px;padding:9px 11px;background:#fff;margin-top:4px;transition:border-color .15s, box-shadow .15s}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  input.bad{border-color:#e5484d}
+  .seg{display:flex;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:3px;margin:4px 0 14px}
+  .seg button{flex:1;border:0;background:transparent;font:inherit;font-size:13px;padding:8px;border-radius:8px;cursor:pointer;color:var(--muted)}
+  .seg button.on{background:#fff;color:var(--ink);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+  .rate-big{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  .rate-big input{font-size:26px;font-weight:700;width:140px;text-align:right;padding:6px 12px}
+  .rate-big .pct{font-size:22px;font-weight:700}
+  .rate-words{color:var(--muted);font-size:12.5px;font-style:italic;min-height:18px}
+  .calc{background:var(--bg);border-radius:10px;padding:10px 12px;margin:10px 0 14px;font-size:13px}
+  .calc input{width:150px;display:inline-block;margin:0 6px;padding:5px 8px}
+  .calc strong{color:var(--ok)}
+  table.rates{width:100%;border-collapse:collapse;margin:4px 0 8px;font-size:13px}
+  table.rates th{text-align:left;font-weight:600;font-size:12px;color:var(--muted);padding:4px 4px}
+  table.rates td{padding:3px 4px;vertical-align:top}
+  table.rates input{margin:0;padding:7px 8px}
+  table.rates td.r input{text-align:right;width:76px}
+  .x{border:0;background:none;color:var(--muted);cursor:pointer;font-size:18px;line-height:1;padding:6px}
+  .x:hover{color:#e5484d}
+  .btn{white-space:nowrap;border:1px solid var(--line);background:#fff;font:inherit;font-size:13px;font-weight:500;padding:8px 14px;border-radius:9px;cursor:pointer;color:var(--ink);display:inline-flex;align-items:center;gap:6px}
+  .btn:hover{border-color:var(--ink)}
+  .btn.primary{background:var(--ink);color:#fff;border-color:var(--ink);font-size:15px;font-weight:600;padding:13px 18px;width:100%;justify-content:center}
+  .btn.primary:hover{background:#000}
+  .btn.ghost{border-color:transparent;background:transparent}
+  .btn.sm{padding:6px 10px;font-size:12.5px}
+  .sticky{position:sticky;top:76px}
+  .meter{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;margin-bottom:12px}
+  .bar{height:8px;background:var(--bg);border-radius:99px;overflow:hidden;margin:6px 0 10px}
+  .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),#f08c3a);transition:width .25s}
+  .checks{display:flex;flex-wrap:wrap;gap:6px}
+  .checks span{font-size:12px;padding:3px 9px;border-radius:99px;background:var(--bg);color:var(--muted)}
+  .checks span.done{background:#e3f6ee;color:var(--ok)}
+  .msg{font-size:13px;margin:10px 0 0;min-height:20px}
+  .msg.ok{color:var(--ok)} .msg.err{color:#e5484d}
+  .preview-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+  .live{font-size:12px;font-weight:600;color:var(--ok);display:flex;align-items:center;gap:6px}
+  .live::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--ok);animation:pulse 1.6s infinite}
+  @keyframes pulse{50%{opacity:.3}}
+  .paper-wrap{background:#e9e6f0;border-radius:var(--radius);padding:24px;max-height:calc(100vh - 220px);overflow:auto}
+  .paper{background:#fff;max-width:794px;margin:0 auto 24px;padding:56px 60px 64px 72px;box-shadow:0 4px 24px rgba(28,26,51,.12);font-family:"Times New Roman",Tinos,serif;font-size:15.5px;line-height:1.45;color:#000}
+  .paper p{margin:0 0 6px}
+  .paper .c{text-align:center} .paper .j{text-align:justify}
+  .paper .b{font-weight:700} .paper .i{font-style:italic}
+  .paper .title{font-size:18px;font-weight:700;margin-top:14px}
+  .paper .rule{width:160px;border-top:1px solid #000;margin:2px auto 10px}
+  .paper .fill{background:#fff6cc;border-radius:2px;padding:0 1px}
+  .paper .empty{background:#ffe3e8;color:#b4234f;border-radius:2px}
+  .paper table{width:100%;border-collapse:collapse;margin:8px 0 10px}
+  .paper table.sign td{width:50%;text-align:center;vertical-align:top;padding-top:10px}
+  .paper table.rtable td,.paper table.rtable th{border:1px solid #000;padding:5px 7px;font-size:14.5px}
+  .paper table.rtable th{font-weight:700;text-align:center}
+  .paper .sp{height:70px}
+  .saved{display:flex;gap:8px;align-items:center}
+  .saved select{margin:0;padding:7px 10px;max-width:220px}
+  footer{max-width:1400px;margin:0 auto;padding:0 24px 40px;color:var(--muted);font-size:12.5px}
+  footer .notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+  footer .notes div{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+  footer b{color:var(--ink)}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <div class="brand">DELULU <span>JSC</span> · Hợp đồng CTV</div>
+    <div class="top-actions">
+      <div class="saved">
+        <select id="savedList" title="Hồ sơ CTV đã lưu trên trình duyệt này"><option value="">— Hồ sơ CTV đã lưu —</option></select>
+        <button class="btn sm" id="btnSave" type="button">💾 Lưu hồ sơ</button>
+        <button class="btn sm ghost" id="btnDel" type="button" title="Xoá hồ sơ đang chọn">🗑</button>
+      </div>
+      <button class="btn sm" id="btnReset" type="button">↺ Làm mới</button>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <span class="badge">Hợp đồng cộng tác viên dịch thuật</span>
+  <h1>Điền thông tin CTV → Tải ngay file .docx</h1>
+  <p class="sub">Không cần đăng nhập. File được tạo ngay trên trình duyệt, dữ liệu không gửi lên máy chủ nào.</p>
+  <ol class="steps">
+    <li><b>1</b>Thông tin hợp đồng</li>
+    <li><b>2</b>Thông tin CTV (Bên B)</li>
+    <li><b>3</b>Tỷ lệ thù lao đã deal</li>
+    <li><b>4</b>Kiểm tra bản xem trước &amp; tải .docx</li>
+  </ol>
+</section>
+
+<main>
+  <form id="f" autocomplete="off" onsubmit="return false">
+
+    <div class="card">
+      <h2><span class="n">1</span>Thông tin hợp đồng</h2>
+      <p class="hint">Số hợp đồng tự gợi ý số kế tiếp sau mỗi lần tải.</p>
+      <div class="grid">
+        <label>Số thứ tự hợp đồng <span class="req">*</span>
+          <input id="soTT" placeholder="VD: 001" inputmode="numeric">
+        </label>
+        <label>Ký hiệu
+          <input id="kyHieu" value="HĐ-DLL">
+        </label>
+        <label>Ngày ký <span class="req">*</span>
+          <input id="ngayKy" type="date">
+        </label>
+        <label>Thời hạn hợp đồng
+          <select id="thoiHan">
+            <option value="6">6 tháng</option>
+            <option value="12" selected>1 năm</option>
+            <option value="24">2 năm</option>
+            <option value="36">3 năm</option>
+            <option value="custom">Tự chọn ngày kết thúc</option>
+          </select>
+        </label>
+        <label>Hiệu lực từ ngày
+          <input id="tuNgay" type="date">
+        </label>
+        <label>Đến ngày
+          <input id="denNgay" type="date">
+        </label>
+        <label class="full">Địa điểm ký
+          <input id="diaDiem" value="120 Trương Văn Bang, phường Cát Lái, Thành phố Hồ Chí Minh">
+        </label>
+        <label>Đại diện Bên A <span class="req">*</span>
+          <input id="daiDienA" value="Nguyễn Lê Bảo Ngọc">
+        </label>
+        <label>Chức vụ <span class="req">*</span>
+          <input id="chucVuA" value="Tổng Giám đốc">
+        </label>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="n">2</span>Bên B – Cộng tác viên</h2>
+      <p class="hint">Thông tin Bên A (DELULU) đã được điền sẵn trong hợp đồng.</p>
+      <div class="grid">
+        <label class="full">Họ và tên <span class="req">*</span>
+          <input id="hoTen" placeholder="Nguyễn Văn A">
+        </label>
+        <label>Ngày sinh <span class="req">*</span>
+          <input id="ngaySinh" type="date">
+        </label>
+        <label>Số định danh cá nhân / MST <span class="req">*</span>
+          <input id="soDinhDanh" placeholder="12 số CCCD" inputmode="numeric">
+        </label>
+        <label class="full">Địa chỉ <span class="req">*</span>
+          <input id="diaChi" placeholder="Số nhà, đường, phường/xã, tỉnh/thành phố">
+        </label>
+        <label class="full">Email nhận đối soát <span class="req">*</span>
+          <input id="email" type="email" placeholder="ctv@email.com">
+        </label>
+        <label>Số tài khoản <span class="req">*</span>
+          <input id="stk" placeholder="0123456789" inputmode="numeric">
+        </label>
+        <label>Ngân hàng / chi nhánh <span class="req">*</span>
+          <input id="nganHang" placeholder="VD: Vietcombank – CN Thủ Đức">
+        </label>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="n">3</span>Tỷ lệ thù lao (Điều 3)</h2>
+      <p class="hint">Tỷ lệ % trên giá trị làm căn cứ chia thù lao của từng đơn hàng — mỗi CTV một mức riêng theo năng lực đã thoả thuận.</p>
+      <div class="seg" id="modeSeg">
+        <button type="button" data-mode="single" class="on">Một tỷ lệ chung</button>
+        <button type="button" data-mode="appendix">Nhiều tỷ lệ – lập Phụ lục 01</button>
+      </div>
+
+      <div id="singleBox">
+        <div class="rate-big">
+          <input id="tyLe" type="number" min="0" max="100" step="0.5" placeholder="60">
+          <span class="pct">%</span>
+        </div>
+        <div class="rate-words" id="tyLeWords"></div>
+      </div>
+
+      <div id="appendixBox" hidden>
+        <table class="rates">
+          <thead><tr><th>Loại công việc</th><th>Ngôn ngữ / phạm vi</th><th>Tỷ lệ %</th><th></th></tr></thead>
+          <tbody id="rateRows"></tbody>
+        </table>
+        <button type="button" class="btn sm" id="addRow">＋ Thêm dòng</button>
+        <label style="margin-top:12px">Ghi chú phụ lục (tuỳ chọn)
+          <textarea id="ghiChuPL" rows="2" placeholder="VD: Tài liệu chuyên ngành y khoa, kỹ thuật cộng thêm 5%"></textarea>
+        </label>
+      </div>
+
+      <div class="calc">
+        Ví dụ: đơn hàng trị giá <input id="viDu" value="1.000.000" inputmode="numeric"> đ
+        → CTV nhận <strong id="viDuKQ">—</strong>
+        <div style="color:var(--muted);font-size:12px;margin-top:4px" id="viDuNote">Thù lao gộp, trước khấu trừ phí ship và thuế TNCN (nếu có).</div>
+      </div>
+    </div>
+
+  </form>
+
+  <aside class="sticky">
+    <div class="meter">
+      <div style="display:flex;justify-content:space-between;font-size:13px"><b>Mức độ hoàn thiện</b><b id="pct">0%</b></div>
+      <div class="bar"><i id="barFill"></i></div>
+      <div class="checks" id="checks"></div>
+      <button class="btn primary" id="btnDownload" type="button" style="margin-top:14px">⬇ Tạo &amp; tải file .docx</button>
+      <div class="msg" id="msg"></div>
+    </div>
+    <div class="preview-head">
+      <b>Bản xem trước</b>
+      <span class="live">LIVE</span>
+    </div>
+    <div class="paper-wrap" id="paperWrap"></div>
+  </aside>
+</main>
+
+<footer>
+  <div class="notes">
+    <div><b>Dữ liệu ở lại trên máy bạn.</b> File .docx được tạo hoàn toàn trong trình duyệt. “Lưu hồ sơ” chỉ lưu vào bộ nhớ của trình duyệt này — nên xoá hồ sơ khi dùng máy chung.</div>
+    <div><b>Chỉnh sửa được trong Word.</b> Phần chữ được điền tự động; bạn vẫn có thể chỉnh nội dung trước khi in.</div>
+    <div><b>Sau khi tải:</b> in 02 bản, hai bên ký; Bên A ký và đóng dấu. Mỗi bên giữ 01 bản.</div>
+  </div>
+  <p style="margin-top:16px">© DELULU JSC · MST 0319403035 · delulu.jsc@gmail.com · delulu.vn</p>
+</footer>
+
+<script>
+(() => {
+  "use strict";
+  const $ = id => document.getElementById(id);
+  const DOTS = "...........................";
+  const PARTY_A = {
+    ten: "CÔNG TY CỔ PHẦN DELULU",
+    mst: "0319403035",
+    diaChi: "120 Trương Văn Bang, phường Cát Lái, Thành phố Hồ Chí Minh",
+    email: "delulu.jsc@gmail.com",
+    tk: "113003046434 - Vietinbank - CN4 TPHCM"
+  };
+  const DEFAULT_ROWS = [
+    { viec: "Dịch thuật", ngonNgu: "Anh ↔ Việt", tyLe: "" },
+    { viec: "Hiệu đính, rà soát bản dịch", ngonNgu: "Anh ↔ Việt", tyLe: "" },
+    { viec: "Dịch thuật có chứng thực chữ ký người dịch", ngonNgu: "", tyLe: "" }
+  ];
+
+  let mode = "single";
+  let rows = DEFAULT_ROWS.map(r => ({...r}));
+
+  /* ---------- storage (best effort) ---------- */
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch { return false; } }
+  };
+
+  /* ---------- helpers ---------- */
+  const pad = n => String(n).padStart(2, "0");
+  const parseISO = s => { if (!s) return null; const [y,m,d] = s.split("-").map(Number); return new Date(y, m-1, d); };
+  const toISO = dt => `${dt.getFullYear()}-${pad(dt.getMonth()+1)}-${pad(dt.getDate())}`;
+  const dmy = s => { const d = parseISO(s); return d ? `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()}` : ""; };
+  const addMonthsMinus1 = (s, m) => { const d = parseISO(s); if (!d) return ""; const e = new Date(d.getFullYear(), d.getMonth()+Number(m), d.getDate()); e.setDate(e.getDate()-1); return toISO(e); };
+  const money = n => Math.round(n).toLocaleString("vi-VN").replace(/,/g, ".");
+  const parseMoney = s => Number(String(s).replace(/[^\d]/g, "")) || 0;
+  const fmtPct = v => String(v).replace(".", ",");
+  const noAccent = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/đ/g, "d").replace(/Đ/g, "D");
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+  const U = ["không","một","hai","ba","bốn","năm","sáu","bảy","tám","chín"];
+  function readInt(n) {
+    if (n < 10) return U[n];
+    if (n < 100) {
+      const t = Math.floor(n/10), u = n % 10;
+      const tens = t === 1 ? "mười" : U[t] + " mươi";
+      if (u === 0) return tens;
+      if (u === 1) return tens + (t === 1 ? " một" : " mốt");
+      if (u === 4 && t > 1) return tens + " tư";
+      if (u === 5) return tens + " lăm";
+      return tens + " " + U[u];
+    }
+    const h = Math.floor(n/100), r = n % 100;
+    return U[h] + " trăm" + (r === 0 ? "" : r < 10 ? " linh " + U[r] : " " + readInt(r));
+  }
+  function pctWords(v) {
+    const s = String(v).trim(); if (!s || isNaN(Number(s))) return "";
+    const [ip, dp] = s.split(".");
+    let w = readInt(Number(ip));
+    if (dp && Number(dp) > 0) {
+      const d = dp.replace(/0+$/, "");
+      w += " phẩy " + (d.startsWith("0") ? d.split("").map(c => U[+c]).join(" ") : readInt(Number(d)));
+    }
+    return w + " phần trăm";
+  }
+  const validRate = v => v !== "" && !isNaN(Number(v)) && Number(v) > 0 && Number(v) <= 100;
+
+  /* ---------- read form ---------- */
+  const FIELDS = ["soTT","kyHieu","ngayKy","thoiHan","tuNgay","denNgay","diaDiem","daiDienA","chucVuA",
+                  "hoTen","ngaySinh","soDinhDanh","diaChi","email","stk","nganHang","tyLe","ghiChuPL"];
+  function read() {
+    const d = {};
+    FIELDS.forEach(k => d[k] = $(k).value.trim());
+    d.mode = mode;
+    d.rows = rows.map(r => ({ viec: r.viec.trim(), ngonNgu: r.ngonNgu.trim(), tyLe: String(r.tyLe).trim() })).filter(r => r.viec || r.ngonNgu || r.tyLe);
+    return d;
+  }
+  function contractNo(d) {
+    const y = parseISO(d.ngayKy)?.getFullYear() || new Date().getFullYear();
+    return `${d.soTT || "......"}/${y}/${d.kyHieu || "HĐ-DLL"}`;
+  }
+
+  /* ---------- document model (shared by preview + docx) ---------- */
+  // run: {text, b, i, fill, empty}
+  const T = (text, o = {}) => ({ text, ...o });
+  const F = (v, ph = DOTS) => v ? { text: v, fill: true } : { text: ph, empty: true };
+  const P = (runs, o = {}) => ({ t: "p", runs: Array.isArray(runs) ? runs : [runs], align: "both", ...o });
+
+  function model(d) {
+    const ky = parseISO(d.ngayKy);
+    const out = [];
+    out.push(P(T("CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM", { b: true }), { align: "center", after: 0 }));
+    out.push(P(T("Độc lập – Tự do – Hạnh phúc", { b: true }), { align: "center", after: 0 }));
+    out.push({ t: "rule" });
+    out.push(P(T("HỢP ĐỒNG CỘNG TÁC VIÊN DỊCH THUẬT", { b: true, size: 28 }), { align: "center", before: 200, after: 40, cls: "title" }));
+    out.push(P([T("Số: "), d.soTT ? F(contractNo(d)) : F("", contractNo(d))], { align: "center", after: 200 }));
+    out.push(P(T("Căn cứ nhu cầu sử dụng dịch vụ dịch thuật và thỏa thuận tự nguyện của các bên.", { i: true })));
+    out.push(P([
+      T("Hôm nay, ngày "), F(ky ? pad(ky.getDate()) : "", "......"),
+      T(" tháng "), F(ky ? pad(ky.getMonth()+1) : "", "......"),
+      T(" năm "), F(ky ? String(ky.getFullYear()) : "", "......"),
+      T(", tại "), F(d.diaDiem), T(", các bên gồm:")
+    ]));
+
+    out.push(P(T("BÊN A – BÊN THUÊ DỊCH VỤ", { b: true }), { before: 120 }));
+    out.push(P(T(PARTY_A.ten, { b: true })));
+    out.push(P(T(`Mã số doanh nghiệp/MST: ${PARTY_A.mst};`)));
+    out.push(P(T(`Địa chỉ trụ sở: ${PARTY_A.diaChi}`)));
+    out.push(P([T("Đại diện: "), F(d.daiDienA), T(";        Chức vụ: "), F(d.chucVuA)]));
+    out.push(P(T(`Email đối soát: ${PARTY_A.email};`)));
+    out.push(P(T(`Tài khoản thanh toán: ${PARTY_A.tk}`)));
+
+    out.push(P(T("BÊN B – CỘNG TÁC VIÊN DỊCH THUẬT", { b: true }), { before: 120 }));
+    out.push(P([T("Họ và tên: "), d.hoTen ? { text: d.hoTen.toUpperCase(), fill: true, b: true } : F(""), T(";")]));
+    out.push(P([T("Ngày sinh: "), F(dmy(d.ngaySinh))]));
+    out.push(P([T("Số định danh cá nhân/MST: "), F(d.soDinhDanh), T(";")]));
+    out.push(P([T("Địa chỉ: "), F(d.diaChi)]));
+    out.push(P([T("Email nhận đối soát: "), F(d.email), T(";")]));
+    const bank = [d.stk, d.nganHang].filter(Boolean).join(" - ");
+    out.push(P([T("Số tài khoản/ngân hàng: "), F(bank)]));
+
+    const H = s => out.push(P(T(s, { b: true }), { before: 140 }));
+    const B = (...runs) => out.push(P(runs.flat(), { indent: true }));
+
+    H("Điều 1. Nội dung và tính chất cộng tác");
+    B(T("1. Bên B nhận phiên dịch, dịch thuật, hiệu đính, rà soát bản dịch và/hoặc hỗ trợ hồ sơ theo từng đơn hàng được Bên A đề nghị và Bên B chấp nhận qua email hoặc hệ thống quản lý đơn hàng. Ngôn ngữ, thời hạn, yêu cầu trình bày, phí dịch vụ và tỷ lệ phân chia được xác định riêng cho từng đơn hàng hoặc theo phụ lục/bảng tỷ lệ đang có hiệu lực."));
+    B(T("2. Bên B có quyền nhận hoặc từ chối từng đơn hàng; không cam kết số lượng đơn tối thiểu, không được trả lương cố định, không áp dụng chấm công hoặc thời giờ làm việc bắt buộc đối với công việc theo hợp đồng này. Hai bên thực hiện theo bản chất quan hệ dịch vụ thực tế và quy định pháp luật có liên quan."));
+    B(T("3. Đối với tài liệu có yêu cầu chứng thực chữ ký người dịch, Bên B chỉ thực hiện công việc trong phạm vi tư cách, điều kiện và quy trình pháp luật cho phép. Hợp đồng này không thay thế quyết định phê duyệt cộng tác viên của cơ quan có thẩm quyền hoặc quan hệ với tổ chức chứng thực. Nhằm làm rõ hơn, đối với các văn bản dịch thuật có công chứng, phải là cộng tác viên hợp pháp đã đăng ký chữ ký với tổ chức hành nghề công chứng hoặc/ và cơ quan nhà nước có thẩm quyền và được xác nhận hợp lệ bởi cơ quan nhà nước có thẩm quyền."));
+
+    H("Điều 2. Giao nhận, nghiệm thu đơn hàng");
+    B(T("1. Mỗi đơn hàng có mã đơn, giá trị tính thù lao, tỷ lệ %, người thực hiện, thời hạn và thông tin giao nhận. Bên A xác nhận giao việc; Bên B xác nhận nhận việc qua email/hệ thống."));
+    B(T("2. Bên B bàn giao bản dịch đúng thời hạn, bảo đảm trung thực, chính xác, bảo mật và chỉnh sửa lỗi chuyên môn do mình gây ra trong thời hạn hợp lý do hai bên thống nhất. Đơn hàng được nghiệm thu khi Bên A xác nhận hoàn thành qua email/hệ thống hoặc theo quy trình nghiệm thu bằng văn bản đã thỏa thuận."));
+
+    H("Điều 3. Tỷ lệ thù lao và cách tính");
+    if (d.mode === "single") {
+      const rate = validRate(d.tyLe)
+        ? [{ text: `${fmtPct(d.tyLe)}% (${pctWords(d.tyLe)})`, fill: true, b: true }]
+        : [F("", "......%")];
+      B(T("1. Thù lao gộp của Bên B cho từng đơn hàng = Giá trị làm căn cứ chia thù lao của đơn hàng × Tỷ lệ % áp dụng. Tỷ lệ %: "), rate,
+        T(" hoặc theo bảng tỷ lệ riêng được hai bên xác nhận bằng email trước khi nhận việc."));
+    } else {
+      B(T("1. Thù lao gộp của Bên B cho từng đơn hàng = Giá trị làm căn cứ chia thù lao của đơn hàng × Tỷ lệ % áp dụng. Tỷ lệ %: "),
+        T("theo Phụ lục 01 – Bảng tỷ lệ thù lao đính kèm Hợp đồng này", { b: true, fill: true }),
+        T(" hoặc bảng tỷ lệ được hai bên xác nhận bằng email trước khi nhận việc."));
+    }
+    B(T("2. Giá trị làm căn cứ chia thù lao là doanh thu dịch vụ dịch thuật của đơn hàng mà Bên A thực thu, không bao gồm thuế GTGT (nếu có), phí chứng thực/công chứng thu hộ, phí vận chuyển thu hộ và khoản thu hộ bên thứ ba, trừ khi hai bên xác nhận cách tính khác bằng văn bản trước khi giao việc."));
+    B(T("3. Đơn hàng bị hủy, giảm giá, hoàn tiền hoặc phát sinh công việc bổ sung được hai bên xác nhận điều chỉnh bằng email; không đơn phương thay đổi tỷ lệ hoặc giá trị sau khi Bên B đã hoàn thành công việc."));
+
+    H("Điều 4. Đối soát hàng tháng và thanh toán ngày 03");
+    B(T("1. Kỳ đối soát: từ ngày 01 đến ngày cuối cùng của tháng. Bên A gửi email bảng đối soát vào hoặc trước ngày 01 của tháng kế tiếp, gồm mã đơn, giá trị tính thù lao, tỷ lệ %, thù lao gộp, phí giao hàng được trừ, khoản điều chỉnh, thuế khấu trừ (nếu có) và số thực thanh toán."));
+    B(T("2. Bên B phản hồi/xác nhận qua email trước 17 giờ ngày 02 của tháng kế tiếp. Nếu có chênh lệch, hai bên đối chiếu chứng từ; phần không tranh chấp vẫn được thanh toán đúng hạn. Việc không phản hồi không làm mất quyền yêu cầu sửa sai khi có bằng chứng."));
+    B(T("3. Bên A thanh toán vào "), T("NGÀY 03 HẰNG THÁNG", { b: true }), T(" đối với thù lao của tháng trước, bằng chuyển khoản đến tài khoản Bên B. Nếu ngày 03 trùng ngày nghỉ/lễ hoặc ngân hàng không xử lý giao dịch, thanh toán vào ngày làm việc tiếp theo. Nội dung chuyển khoản ghi rõ kỳ đối soát."));
+
+    H("Điều 5. Chi phí giao hàng (ship) và khoản khấu trừ");
+    B(T("1. Với đơn hàng cần gửi/nhận hồ sơ, bản dịch hoặc tài liệu vật lý, phí giao hàng thực tế do Bên A ứng trả và thuộc trách nhiệm Bên B theo xác nhận khi giao việc sẽ được "), T("TRỪ VÀO TỔNG THÙ LAO PHẢI THANH TOÁN CỦA BÊN B TRONG THÁNG TƯƠNG ỨNG", { b: true }), T("."));
+    B(T("2. Chỉ trừ chi phí giao hàng có mã đơn, số tiền và bằng chứng hợp lệ (biên nhận đơn vị vận chuyển, hóa đơn hoặc lịch sử ứng dụng giao hàng). Không trừ chi phí giao hàng do lỗi của Bên A, chi phí chưa được thông báo/chấp thuận hoặc khoản đã thu trực tiếp từ khách hàng mà không thuộc trách nhiệm Bên B."));
+    B(T("3. Công thức: Số tiền chuyển khoản = Tổng thù lao gộp đã nghiệm thu – Tổng phí giao hàng hợp lệ Bên B chịu – Các khoản điều chỉnh được xác nhận – Thuế TNCN phải khấu trừ theo pháp luật (nếu có). Nếu phí giao hàng vượt thù lao kỳ này, phần chênh lệch chỉ được chuyển kỳ sau khi Bên B xác nhận bằng email; không tự động phát sinh khoản nợ không được chấp thuận."));
+
+    H("Điều 6. Thuế và chứng từ");
+    B(T("Bên A thực hiện xác định, khấu trừ, kê khai thuế TNCN (nếu phát sinh) theo bản chất khoản chi và pháp luật tại thời điểm thanh toán. Bên B cung cấp thông tin định danh, mã số thuế và phối hợp quyết toán theo nghĩa vụ của mình. Tỷ lệ % tại Điều 3 là thù lao trước khấu trừ thuế, trừ khi có thỏa thuận khác bằng văn bản."));
+
+    H("Điều 7. Quyền, nghĩa vụ và bảo mật");
+    B(T("Bên A cung cấp tài liệu, yêu cầu rõ ràng, nghiệm thu và thanh toán đúng hạn; Bên B bảo đảm chất lượng, tiến độ, quyền sử dụng hợp pháp đối với sản phẩm dịch thuật, không tự ý tiết lộ dữ liệu khách hàng hoặc chuyển giao tài liệu cho người khác khi chưa được đồng ý. Nghĩa vụ bảo mật tiếp tục trong 03 năm sau khi chấm dứt hợp đồng, riêng dữ liệu cá nhân/bí mật kinh doanh được bảo vệ theo pháp luật và cam kết có hiệu lực tương ứng."));
+
+    H("Điều 8. Thời hạn, chấm dứt và giải quyết tranh chấp");
+    B(T("Hợp đồng có hiệu lực từ ngày "), F(dmy(d.tuNgay), "....../....../......"), T(" đến ngày "), F(dmy(d.denNgay), "....../....../......"),
+      T("; có thể gia hạn bằng phụ lục. Mỗi bên có thể chấm dứt bằng thông báo email trước 15 ngày, nhưng phải hoàn tất hoặc thống nhất xử lý đơn hàng đã nhận và thanh toán công việc đã nghiệm thu. Tranh chấp được thương lượng trước; nếu không giải quyết được thì đưa ra Tòa án có thẩm quyền theo pháp luật Việt Nam."));
+    B(T("Các phụ lục, bảng tỷ lệ và email giao việc/đối soát được xác nhận là bộ phận của hợp đồng. Hợp đồng lập thành 02 bản có giá trị như nhau, mỗi bên giữ 01 bản."));
+
+    out.push(signBlock(d, "ĐẠI DIỆN BÊN A", "(Ký, ghi rõ họ tên, chức vụ)"));
+
+    if (d.mode === "appendix") {
+      out.push({ t: "pagebreak" });
+      out.push(P(T("PHỤ LỤC 01", { b: true, size: 28 }), { align: "center", after: 0, cls: "title" }));
+      out.push(P(T("BẢNG TỶ LỆ THÙ LAO CỘNG TÁC VIÊN", { b: true }), { align: "center", after: 0 }));
+      out.push(P([T("(Kèm theo Hợp đồng cộng tác viên dịch thuật số "), d.soTT ? F(contractNo(d)) : F("", contractNo(d)),
+                  T(" ký ngày "), F(dmy(d.ngayKy), "....../....../......"), T(")")], { align: "center", after: 200, italicAll: true }));
+      out.push(P([T("Cộng tác viên (Bên B): "), d.hoTen ? { text: d.hoTen.toUpperCase(), fill: true, b: true } : F("")]));
+      out.push(P(T("Tỷ lệ % dưới đây áp dụng trên giá trị làm căn cứ chia thù lao theo khoản 2 Điều 3 của Hợp đồng, là thù lao gộp trước khấu trừ phí giao hàng và thuế TNCN (nếu có).")));
+      out.push({ t: "rates", rows: d.rows });
+      if (d.ghiChuPL) out.push(P([T("Ghi chú: ", { b: true }), F(d.ghiChuPL)]));
+      out.push(P(T("Phụ lục này là bộ phận không tách rời của Hợp đồng, có hiệu lực kể từ ngày ký. Việc điều chỉnh tỷ lệ được thực hiện bằng phụ lục mới hoặc email xác nhận của hai bên trước khi nhận việc.")));
+      out.push(signBlock(d, "ĐẠI DIỆN BÊN A", "(Ký, ghi rõ họ tên, chức vụ)"));
+    }
+    return out;
+  }
+  function signBlock(d, aTitle, aNote) {
+    return { t: "sign",
+      a: [T(aTitle, { b: true }), T(aNote, { i: true }), { sp: true }, d.daiDienA ? { text: d.daiDienA, b: true, fill: true } : F("")],
+      b: [T("BÊN B – CỘNG TÁC VIÊN", { b: true }), T("(Ký, ghi rõ họ tên)", { i: true }), { sp: true }, d.hoTen ? { text: d.hoTen, b: true, fill: true } : F("")]
+    };
+  }
+
+  /* ---------- HTML preview ---------- */
+  function runHTML(r, italicAll) {
+    const cls = [r.b && "b", (r.i || italicAll) && "i", r.fill && "fill", r.empty && "empty"].filter(Boolean).join(" ");
+    return cls ? `<span class="${cls}">${esc(r.text)}</span>` : esc(r.text);
+  }
+  function renderPreview(m) {
+    let pages = [[]];
+    m.forEach(bk => bk.t === "pagebreak" ? pages.push([]) : pages[pages.length-1].push(bk));
+    $("paperWrap").innerHTML = pages.map(pg => `<div class="paper">${pg.map(bk => {
+      if (bk.t === "rule") return `<div class="rule"></div>`;
+      if (bk.t === "p") {
+        const style = [bk.indent ? "text-indent:0" : "", bk.before ? `margin-top:${bk.before/20}px` : ""].filter(Boolean).join(";");
+        return `<p class="${bk.align === "center" ? "c" : "j"} ${bk.cls || ""}" style="${style}">${bk.runs.map(r => runHTML(r, bk.italicAll)).join("")}</p>`;
+      }
+      if (bk.t === "sign") {
+        const col = arr => arr.map(r => r.sp ? `<div class="sp"></div>` : `<div>${runHTML(r)}</div>`).join("");
+        return `<table class="sign"><tr><td>${col(bk.a)}</td><td>${col(bk.b)}</td></tr></table>`;
+      }
+      if (bk.t === "rates") {
+        const body = bk.rows.length ? bk.rows.map((r, i) => `<tr><td style="text-align:center">${i+1}</td><td>${esc(r.viec)}</td><td>${esc(r.ngonNgu)}</td><td style="text-align:center">${validRate(r.tyLe) ? `<span class="fill">${fmtPct(r.tyLe)}%</span>` : `<span class="empty">......%</span>`}</td></tr>`).join("")
+          : `<tr><td colspan="4" style="text-align:center"><span class="empty">Chưa có dòng tỷ lệ nào</span></td></tr>`;
+        return `<table class="rtable"><thead><tr><th style="width:44px">STT</th><th>Loại công việc</th><th>Ngôn ngữ / phạm vi</th><th style="width:90px">Tỷ lệ %</th></tr></thead><tbody>${body}</tbody></table>`;
+      }
+      return "";
+    }).join("")}</div>`).join("");
+  }
+
+  /* ---------- DOCX ---------- */
+  const FONT = "Times New Roman", SIZE = 26; // 13pt
+  function dRun(r, italicAll, sizeOverride) {
+    return new docx.TextRun({ text: r.text, bold: !!r.b, italics: !!(r.i || italicAll), font: FONT, size: r.size || sizeOverride || SIZE });
+  }
+  function buildDocx(m) {
+    const D = docx;
+    const children = [];
+    const noBorder = { style: D.BorderStyle.NONE, size: 0, color: "FFFFFF" };
+    const noBorders = { top: noBorder, bottom: noBorder, left: noBorder, right: noBorder, insideHorizontal: noBorder, insideVertical: noBorder };
+    const line = { style: D.BorderStyle.SINGLE, size: 4, color: "000000" };
+    const lines = { top: line, bottom: line, left: line, right: line, insideHorizontal: line, insideVertical: line };
+    let breakNext = false;
+    const para = (runs, o = {}) => new D.Paragraph({
+      children: runs, alignment: o.align === "center" ? D.AlignmentType.CENTER : o.align === "left" ? D.AlignmentType.LEFT : D.AlignmentType.JUSTIFIED,
+      spacing: { before: o.before ?? 0, after: o.after ?? 60, line: 300 },
+      indent: o.indent ? { firstLine: 0 } : undefined,
+      pageBreakBefore: !!o.pageBreakBefore
+    });
+    m.forEach(bk => {
+      if (bk.t === "pagebreak") { breakNext = true; return; }
+      const pb = breakNext; breakNext = false;
+      if (bk.t === "rule") {
+        children.push(new D.Paragraph({ alignment: D.AlignmentType.CENTER, spacing: { after: 120 }, children: [new D.TextRun({ text: "———————————", font: FONT, size: 20 })] }));
+      } else if (bk.t === "p") {
+        children.push(para(bk.runs.map(r => dRun(r, bk.italicAll)), { ...bk, pageBreakBefore: pb }));
+      } else if (bk.t === "sign") {
+        const cell = arr => new D.TableCell({ width: { size: 50, type: D.WidthType.PERCENTAGE }, borders: noBorders,
+          children: arr.flatMap(r => r.sp
+            ? [1,2,3,4].map(() => para([new D.TextRun({ text: "", font: FONT, size: SIZE })], { align: "center", after: 0 }))
+            : [para([dRun(r)], { align: "center", after: 0 })]) });
+        children.push(new D.Paragraph({ spacing: { before: 200 }, children: [] }));
+        children.push(new D.Table({ width: { size: 100, type: D.WidthType.PERCENTAGE }, borders: noBorders,
+          rows: [new D.TableRow({ children: [cell(bk.a), cell(bk.b)] })] }));
+      } else if (bk.t === "rates") {
+        const c = (txt, o = {}) => new D.TableCell({ width: { size: o.w, type: D.WidthType.DXA }, borders: lines,
+          margins: { top: 60, bottom: 60, left: 100, right: 100 }, verticalAlign: D.VerticalAlign.CENTER,
+          children: [para([new D.TextRun({ text: txt, bold: !!o.b, font: FONT, size: 24 })], { align: o.center ? "center" : "left", after: 0 })] });
+        const W = [726, 4173, 2721, 1451]; // DXA, tổng = bề rộng vùng in 9071
+        const head = new D.TableRow({ tableHeader: true, children: ["STT","Loại công việc","Ngôn ngữ / phạm vi","Tỷ lệ %"].map((h, i) => c(h, { b: true, center: true, w: W[i] })) });
+        const body = (bk.rows.length ? bk.rows : [{ viec: "", ngonNgu: "", tyLe: "" }]).map((r, i) => new D.TableRow({ children: [
+          c(String(i+1), { center: true, w: W[0] }), c(r.viec, { w: W[1] }), c(r.ngonNgu, { w: W[2] }),
+          c(validRate(r.tyLe) ? fmtPct(r.tyLe) + "%" : "......%", { center: true, b: true, w: W[3] }) ] }));
+        children.push(new D.Table({ width: { size: 9071, type: D.WidthType.DXA }, columnWidths: W, rows: [head, ...body] }));
+        children.push(para([new D.TextRun({ text: "", font: FONT, size: SIZE })]));
+      }
+    });
+    return new D.Document({
+      creator: "DELULU JSC", title: "Hợp đồng cộng tác viên dịch thuật",
+      styles: { default: { document: { run: { font: FONT, size: SIZE } } } },
+      sections: [{ properties: { page: { size: { width: 11906, height: 16838 },
+        margin: { top: 1134, right: 1134, bottom: 1134, left: 1701 } } }, children }]
+    });
+  }
+
+  /* ---------- checks ---------- */
+  function checks(d) {
+    const rateOK = d.mode === "single" ? validRate(d.tyLe) : (d.rows.length > 0 && d.rows.every(r => r.viec && validRate(r.tyLe)));
+    return [
+      ["Số HĐ", !!d.soTT], ["Ngày ký", !!d.ngayKy], ["Đại diện A", !!(d.daiDienA && d.chucVuA)],
+      ["Họ tên CTV", !!d.hoTen], ["Ngày sinh", !!d.ngaySinh], ["Số định danh", !!d.soDinhDanh],
+      ["Địa chỉ", !!d.diaChi], ["Email", /^\S+@\S+\.\S+$/.test(d.email)], ["Tài khoản", !!(d.stk && d.nganHang)],
+      ["Tỷ lệ %", rateOK], ["Thời hạn", !!(d.tuNgay && d.denNgay && d.denNgay >= d.tuNgay)]
+    ];
+  }
+
+  /* ---------- UI ---------- */
+  function renderRows() {
+    $("rateRows").innerHTML = rows.map((r, i) => `<tr>
+      <td><input data-i="${i}" data-k="viec" value="${esc(r.viec)}" placeholder="Loại công việc"></td>
+      <td><input data-i="${i}" data-k="ngonNgu" value="${esc(r.ngonNgu)}" placeholder="VD: Trung ↔ Việt"></td>
+      <td class="r"><input data-i="${i}" data-k="tyLe" value="${esc(r.tyLe)}" type="number" min="0" max="100" step="0.5" placeholder="%"></td>
+      <td><button type="button" class="x" data-del="${i}" title="Xoá dòng">×</button></td></tr>`).join("");
+  }
+  $("rateRows").addEventListener("input", e => { const t = e.target; if (t.dataset.k) { rows[+t.dataset.i][t.dataset.k] = t.value; update(); } });
+  $("rateRows").addEventListener("click", e => { const i = e.target.dataset.del; if (i !== undefined) { rows.splice(+i, 1); renderRows(); update(); } });
+  $("addRow").onclick = () => { rows.push({ viec: "", ngonNgu: "", tyLe: "" }); renderRows(); update(); };
+
+  function setMode(m) {
+    mode = m;
+    document.querySelectorAll("#modeSeg button").forEach(b => b.classList.toggle("on", b.dataset.mode === m));
+    $("singleBox").hidden = m !== "single"; $("appendixBox").hidden = m !== "appendix";
+    update();
+  }
+  document.querySelectorAll("#modeSeg button").forEach(b => b.onclick = () => setMode(b.dataset.mode));
+
+  function syncEnd() {
+    const th = $("thoiHan").value;
+    $("denNgay").readOnly = th !== "custom";
+    if (th !== "custom" && $("tuNgay").value) $("denNgay").value = addMonthsMinus1($("tuNgay").value, th);
+  }
+  $("ngayKy").addEventListener("change", () => { $("tuNgay").value = $("ngayKy").value; syncEnd(); update(); });
+  $("tuNgay").addEventListener("change", () => { syncEnd(); update(); });
+  $("thoiHan").addEventListener("change", () => { syncEnd(); update(); });
+
+  function update() {
+    const d = read();
+    // rate words + calc
+    $("tyLeWords").textContent = validRate(d.tyLe) ? `Bằng chữ: ${pctWords(d.tyLe)}` : (d.tyLe ? "Tỷ lệ phải lớn hơn 0 và không quá 100" : "");
+    $("tyLe").classList.toggle("bad", !!d.tyLe && !validRate(d.tyLe));
+    const base = parseMoney($("viDu").value);
+    if (d.mode === "single") {
+      $("viDuKQ").textContent = validRate(d.tyLe) && base ? money(base * Number(d.tyLe) / 100) + " đ" : "—";
+    } else {
+      const rs = d.rows.filter(r => validRate(r.tyLe));
+      $("viDuKQ").textContent = rs.length && base ? rs.map(r => `${money(base * Number(r.tyLe) / 100)} đ (${r.viec || "dòng"} ${fmtPct(r.tyLe)}%)`).join(" · ") : "—";
+    }
+    // meter
+    const c = checks(d), done = c.filter(x => x[1]).length, pct = Math.round(done / c.length * 100);
+    $("pct").textContent = pct + "%"; $("barFill").style.width = pct + "%";
+    $("checks").innerHTML = c.map(([k, ok]) => `<span class="${ok ? "done" : ""}">${ok ? "✓" : "○"} ${k}</span>`).join("");
+    renderPreview(model(d));
+    return { d, c };
+  }
+  $("f").addEventListener("input", update);
+  $("viDu").addEventListener("input", e => { const n = parseMoney(e.target.value); e.target.value = n ? money(n) : ""; update(); });
+
+  /* ---------- download ---------- */
+  $("btnDownload").onclick = async () => {
+    const { d, c } = update();
+    const missing = c.filter(x => !x[1]).map(x => x[0]);
+    const msg = $("msg");
+    if (missing.length && !confirm(`Còn thiếu: ${missing.join(", ")}.\nVẫn tạo file với chỗ trống "......"?`)) return;
+    if (typeof docx === "undefined") { msg.className = "msg err"; msg.textContent = "Chưa tải được thư viện tạo .docx — kiểm tra kết nối mạng rồi tải lại trang."; return; }
+    try {
+      const blob = await docx.Packer.toBlob(buildDocx(model(d)));
+      const nameSlug = noAccent(d.hoTen || "CTV").replace(/[^A-Za-z0-9]+/g, "_").replace(/^_|_$/g, "");
+      const fname = `HD_CTV_${(d.soTT || "XXX")}-${parseISO(d.ngayKy)?.getFullYear() || ""}_${nameSlug}.docx`;
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob); a.download = fname; document.body.appendChild(a); a.click();
+      setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+      msg.className = "msg ok"; msg.textContent = `✓ Đã tạo ${fname}`;
+      if (/^\d+$/.test(d.soTT)) store.set("dll_ctv_lastNo", Number(d.soTT));
+    } catch (err) {
+      console.error(err); msg.className = "msg err"; msg.textContent = "Có lỗi khi tạo file: " + err.message;
+    }
+  };
+
+  /* ---------- saved profiles ---------- */
+  const PROFILE_KEYS = ["hoTen","ngaySinh","soDinhDanh","diaChi","email","stk","nganHang","tyLe","ghiChuPL"];
+  function refreshSaved(sel) {
+    const list = store.get("dll_ctv_profiles", {});
+    $("savedList").innerHTML = `<option value="">— Hồ sơ CTV đã lưu (${Object.keys(list).length}) —</option>` +
+      Object.keys(list).sort((a, b) => a.localeCompare(b, "vi")).map(k => `<option ${k === sel ? "selected" : ""}>${esc(k)}</option>`).join("");
+  }
+  $("btnSave").onclick = () => {
+    const d = read(); if (!d.hoTen) { alert("Nhập họ tên CTV trước khi lưu."); return; }
+    const list = store.get("dll_ctv_profiles", {});
+    const p = {}; PROFILE_KEYS.forEach(k => p[k] = d[k]); p.mode = d.mode; p.rows = rows;
+    list[d.hoTen] = p;
+    if (store.set("dll_ctv_profiles", list)) { refreshSaved(d.hoTen); $("msg").className = "msg ok"; $("msg").textContent = `✓ Đã lưu hồ sơ “${d.hoTen}” trên trình duyệt này.`; }
+    else alert("Trình duyệt không cho phép lưu dữ liệu.");
+  };
+  $("savedList").onchange = e => {
+    const p = store.get("dll_ctv_profiles", {})[e.target.value]; if (!p) return;
+    PROFILE_KEYS.forEach(k => $(k).value = p[k] || "");
+    rows = (p.rows && p.rows.length ? p.rows : DEFAULT_ROWS).map(r => ({...r})); renderRows();
+    setMode(p.mode || "single");
+  };
+  $("btnDel").onclick = () => {
+    const k = $("savedList").value; if (!k || !confirm(`Xoá hồ sơ “${k}”?`)) return;
+    const list = store.get("dll_ctv_profiles", {}); delete list[k]; store.set("dll_ctv_profiles", list); refreshSaved();
+  };
+
+  /* ---------- init / reset ---------- */
+  function init(keepNo) {
+    $("f").reset();
+    const today = toISO(new Date());
+    $("ngayKy").value = today; $("tuNgay").value = today;
+    const last = store.get("dll_ctv_lastNo", 0);
+    if (!keepNo) $("soTT").value = String(last + 1).padStart(3, "0");
+    rows = DEFAULT_ROWS.map(r => ({...r})); renderRows();
+    syncEnd(); setMode("single"); refreshSaved();
+    $("msg").textContent = "";
+  }
+  $("btnReset").onclick = () => { if (confirm("Xoá toàn bộ thông tin đang nhập?")) init(); };
+  init();
+})();
+</script>
+</body>
+</html>
